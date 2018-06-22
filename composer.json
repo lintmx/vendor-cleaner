@@ -1,0 +1,23 @@
+{
+    "name": "lintmx/vendor-cleaner",
+    "description": "clean vendor dir",
+    "type": "composer-plugin",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "lintmx",
+            "email": "lintmx@gmail.com"
+        }
+    ],
+    "require": {
+        "composer-plugin-api": "^1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Cleaner\\Composer\\": "src/"
+        }
+    },
+    "extra": {
+        "class": "Cleaner\\Composer\\VendorCleanerPlugin"
+    }
+}
