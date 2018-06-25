@@ -4,11 +4,12 @@ namespace Cleaner\Composer;
 
 use Composer\Composer;
 use Composer\IO\IOInterface;
+use Composer\Plugin\Capable;
 use Composer\Util\Filesystem;
 use Composer\Plugin\PluginInterface;
 use Composer\EventDispatcher\EventSubscriberInterface;
 
-class VendorCleanerPlugin implements PluginInterface, EventSubscriberInterface
+class VendorCleanerPlugin implements PluginInterface, EventSubscriberInterface, Capable
 {
     private $io;
 
@@ -60,6 +61,18 @@ class VendorCleanerPlugin implements PluginInterface, EventSubscriberInterface
     }
 
     /**
+     * 绑定命令
+     *
+     * @return void
+     */
+    public function getCapabilities()
+    {
+        return array(
+            'Composer\Plugin\Capability\CommandProvider' => 'Cleaner\Composer\CommandProvider',
+        );
+    }
+
+    /**
      * 绑定事件
      *
      * @return void
@@ -77,11 +90,15 @@ class VendorCleanerPlugin implements PluginInterface, EventSubscriberInterface
      *
      * @return void
      */
-    public function clean()
+    public function clean($confirmAsk = ture)
     {
         // 获取 Vendor 目录路径
         $vendorDir = $this->config->get('vendor-dir');
-        $confirm = $this->io->askConfirmation("Clean Vendor Directory ? (Default: yes)");
+        if ($confirmAsk) {
+            $confirm = $this->io->askConfirmation("Clean Vendor Directory ? (Default: yes)");
+        } else {
+            $confirm = true;
+        }
 
         $rmDirPreg = '/' . implode('|', $this->rmDir) . '/i';
         $rmFilePreg = '/' . implode('|', $this->rmFile) . '/i';
